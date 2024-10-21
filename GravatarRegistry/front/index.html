@@ -165,7 +165,10 @@
           <h2 class="text-xl font-bold mb-4" id="create-gravatar-modal-title">
             Create Gravatar
           </h2>
-          <div id="wallet-connect-status"></div>
+          <div
+            id="wallet-connect-status"
+            class="max-h-[120px] overflow-y-auto"
+          ></div>
           <form id="create-gravatar-form">
             <div class="relative">
               <div class="mb-4">
@@ -555,7 +558,17 @@
               fileInput.addEventListener("change", () => {
                 const file = fileInput.files[0];
 
+                // clear file input
+                fileInput.value = "";
+
                 if (!file) {
+                  return;
+                }
+
+                // check file size
+                if (file.size > 1024 * 1024 * 1) {
+                  alert("File size must be less than 1MB");
+
                   return;
                 }
 
