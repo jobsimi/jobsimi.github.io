@@ -292,10 +292,10 @@
               console.error(error);
 
               walletConnectStatus.innerHTML = `
-                      <div class="text-red-500 text-sm bg-red-100 p-2 rounded-lg mb-4 break-all">
-                        Wallet error: ${error.message}
-                      </div>
-                      `;
+                            <div class="text-red-500 text-sm bg-red-100 p-2 rounded-lg mb-4 break-all">
+                              Wallet error: ${error.message}
+                            </div>
+                            `;
             }
 
             // loading
@@ -316,10 +316,10 @@
               // loading
               {
                 walletConnectStatus.innerHTML = `
-                      <div class="text-yellow-500 text-sm bg-yellow-100 p-2 rounded-lg mb-4">
-                        Wallet connecting...
-                      </div>
-                      `;
+                            <div class="text-yellow-500 text-sm bg-yellow-100 p-2 rounded-lg mb-4">
+                              Wallet connecting...
+                            </div>
+                            `;
 
                 // disable form input
                 {
@@ -339,10 +339,10 @@
                     "..." +
                     web3.walletAddress.slice(-4);
                   walletConnectStatus.innerHTML = `
-                      <div class="text-green-500 text-sm bg-green-100 p-2 rounded-lg mb-4">
-                        Wallet connected: <a href="https://etherscan.io/address/${ellipseWalletAddress}" title="${web3.walletAddress}" class="text-blue-500">${ellipseWalletAddress}</a>
-                      </div>
-                      `;
+                            <div class="text-green-500 text-sm bg-green-100 p-2 rounded-lg mb-4">
+                              Wallet connected: <a href="https://etherscan.io/address/${ellipseWalletAddress}" title="${web3.walletAddress}" class="text-blue-500">${ellipseWalletAddress}</a>
+                            </div>
+                            `;
                 }
 
                 // Check Gravatar, if exists, update it
@@ -440,10 +440,10 @@
                         } catch (error) {
                           console.error(error);
                           walletConnectStatus.innerHTML = `
-                          <div class="text-red-500 text-sm bg-red-100 p-2 rounded-lg mb-4 break-all">
-                            Update Gravatar error: ${error.message}
-                          </div>
-                          `;
+                                <div class="text-red-500 text-sm bg-red-100 p-2 rounded-lg mb-4 break-all">
+                                  Update Gravatar error: ${error.message}
+                                </div>
+                                `;
                         }
 
                         // loading
@@ -467,10 +467,10 @@
               } catch (error) {
                 console.error(error);
                 walletConnectStatus.innerHTML = `
-                      <div class="text-red-500 text-sm bg-red-100 p-2 rounded-lg mb-4 break-all">
-                        Wallet connect error: ${error.message}
-                      </div>
-                      `;
+                            <div class="text-red-500 text-sm bg-red-100 p-2 rounded-lg mb-4 break-all">
+                              Wallet connect error: ${error.message}
+                            </div>
+                            `;
               }
             }
           });
@@ -497,41 +497,8 @@
         const gravatars = await searchGravatars();
 
         // show gravatar
-        document.getElementById("gravatar-list").innerHTML = `
-          ${gravatars
-            .map(
-              (gravatar) => `
-              <a class="flex items-center border border-gray-200 p-4 hover:bg-gray-100 rounded-lg hover:border-gray-300 hover:shadow-md transition-all duration-300 ease-in-out
-              hover:scale-105 xl:hover:scale-[3] w-full sm:w-auto"
-              "
-                href="https://sepolia.etherscan.io/tx/${
-                  gravatar.transactionHash
-                }#eventlog"
-                title="View on Etherscan"
-              >
-                <div class="flex">
-                  <img
-                      src="${gravatar.url}"
-                      alt="${gravatar.name}"
-                      class="w-12 h-12 rounded-full mr-4"
-                  />
-                  <div class="flex flex-col justify-between gap-2">
-                    <div class="text-lg font-bold">${gravatar.name}</div>
-                    <div class="flex flex-col gap-1">
-                      <div class="text-xs text-gray-500 bg-gray-50 rounded-lg">
-                      ${new Date(
-                        gravatar.blockTimestamp * 1000
-                      ).toLocaleString()}
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              </a>
-            `
-            )
-            .join("")}
-          `;
+        document.getElementById("gravatar-list").innerHTML =
+          renderGravatars(gravatars);
       }
       /**
        * search gravatars
@@ -554,24 +521,24 @@
             },
             body: JSON.stringify({
               query: `
-                    {
-                      gravatars(
-                        first: ${pageSize}
-                        orderBy: blockTimestamp
-                        orderDirection: desc
-                        where: {
-                          blockTimestamp_lt: "${blockTimestamp_lt}"
-                        }
-                      ) {
-                        id
-                        owner
-                        name
-                        url
-                        transactionHash
-                        blockTimestamp
-                      }
-                    }
-                  `,
+                          {
+                            gravatars(
+                              first: ${pageSize}
+                              orderBy: blockTimestamp
+                              orderDirection: desc
+                              where: {
+                                blockTimestamp_lt: "${blockTimestamp_lt}"
+                              }
+                            ) {
+                              id
+                              owner
+                              name
+                              url
+                              transactionHash
+                              blockTimestamp
+                            }
+                          }
+                        `,
             }),
           }
         );
@@ -579,6 +546,39 @@
         const json = await response.json();
 
         return json.data.gravatars;
+      }
+      function renderGravatars(gravatars) {
+        return gravatars
+          .map(
+            (gravatar) => `
+            <a class="flex items-center border border-gray-200 p-4 hover:bg-gray-100 rounded-lg hover:border-gray-300 hover:shadow-md transition-all duration-300 ease-in-out
+            hover:scale-105 xl:hover:scale-[3] w-full sm:w-auto"
+            "
+              href="https://sepolia.etherscan.io/tx/${
+                gravatar.transactionHash
+              }#eventlog"
+              title="View on Etherscan"
+            >
+              <div class="flex">
+                <img
+                    src="${gravatar.url}"
+                    alt="${gravatar.name}"
+                    class="w-12 h-12 rounded-full mr-4"
+                />
+                <div class="flex flex-col justify-between gap-2">
+                  <div class="text-lg font-bold">${gravatar.name}</div>
+                  <div class="flex flex-col gap-1">
+                    <div class="text-xs text-gray-500 bg-gray-50 rounded-lg">
+                    ${new Date(gravatar.blockTimestamp * 1000).toLocaleString()}
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </a>
+          `
+          )
+          .join("");
       }
 
       class Web3 {
