@@ -575,7 +575,7 @@
       }
 
       async function initLoadingGravatarList() {
-        const pageSize = 10;
+        const pageSize = 1;
         const gravatars = await searchGravatars({
           pageSize,
         });
@@ -595,6 +595,10 @@
               {
                 alreadyLoadedAllContainer.classList.remove("hidden");
               }
+            }
+
+            if (gravatars.length === pageSize) {
+              loadingMoreContainer.classList.remove("hidden");
             }
 
             if (gravatars.length > 0) {
