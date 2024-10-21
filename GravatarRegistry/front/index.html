@@ -287,8 +287,6 @@
 
         const web3 = new Web3();
 
-        const ipfs = new IPFS();
-
         // create gravatar
         {
           const createGravatarButton = document.getElementById(
@@ -565,7 +563,7 @@
 
                 // ipfs cid
                 // bafkreihsc6mcj7xbkce55b6ejgwlhqwcon73qf7seevl45ooomsdg24bfi
-                if (gravatarURL.length === 59) {
+                if (ipfs.isImageCID(gravatarURL)) {
                   gravatarPreview.src = await ipfs.retriveImageURL(gravatarURL);
                   console.log("gravatarURL", gravatarURL);
                   return;
@@ -672,7 +670,7 @@
                 if (gravatars.length > 0) {
                   gravatarListContainer.innerHTML =
                     gravatarListContainer.innerHTML +
-                    renderGravatars(gravatars);
+                    (await renderGravatars(gravatars));
                 }
               }
             }
@@ -714,7 +712,9 @@
             }
 
             if (gravatars.length > 0) {
-              gravatarListContainer.innerHTML = renderGravatars(gravatars);
+              gravatarListContainer.innerHTML = await renderGravatars(
+                gravatars
+              );
             }
           }
         }
@@ -766,7 +766,17 @@
 
         return json.data.gravatars;
       }
-      function renderGravatars(gravatars) {
+      async function renderGravatars(gravatars) {
+        // retrive ipfs url
+        for (let i = 0; i < gravatars.length; i++) {
+          const gravatar = gravatars[i];
+          const gravatarURL = gravatar.url;
+
+          if (ipfs.isImageCID(gravatarURL)) {
+            gravatar.url = await ipfs.retriveImageURL(gravatarURL);
+          }
+        }
+
         return gravatars
           .map(
             (gravatar) => `
@@ -1099,7 +1109,16 @@
           console.log("text", text);
           return text;
         }
+        isImageCID(string) {
+          if (string.length === 59) {
+            return true;
+          }
+
+          return false;
+        }
       }
+
+      const ipfs = new IPFS();
     </script>
   </body>
 </html>
