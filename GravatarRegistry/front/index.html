@@ -506,7 +506,7 @@
                 body: JSON.stringify({
                   query: `
                   {
-                    gravatars(first: 10) {
+                    gravatars(first: 10, orderBy: blockTimestamp, orderDirection: desc, skip: 0) {
                       id
                       owner
                       name
