@@ -217,7 +217,7 @@
                       id="upload-gravatar-file"
                       name="upload-gravatar-file"
                       class="hidden"
-                      accept="image/png, image/jpeg, image/webp, image/jpg"
+                      accept="image/png, image/jpeg, image/webp, image/jpg, .svg"
                     />
                   </div>
                 </div>
@@ -285,6 +285,8 @@
         await initLoadingGravatarList();
 
         const web3 = new Web3();
+
+        const ipfs = new IPFS();
 
         // create gravatar
         {
@@ -573,10 +575,17 @@
                 }
 
                 const reader = new FileReader();
-                reader.onload = (event) => {
-                  gravatarPreview.src = event.target.result;
-                  createGravatarForm["gravatar-url"].value =
-                    gravatarPreview.src;
+                reader.onload = async (event) => {
+                  const fileUrl = event.target.result;
+
+                  // upload to ipfs
+                  {
+                    const cid = await ipfs.addImageURL(fileUrl);
+                    {
+                      gravatarPreview.src = fileUrl;
+                      createGravatarForm["gravatar-url"].value = cid;
+                    }
+                  }
                 };
                 reader.readAsDataURL(file);
               });
@@ -1047,6 +1056,20 @@
             const text = await strings.get(cid);
             console.log("text", text);
           }
+        }
+        async addImageURL(imageURL) {
+          const helia = await Helia.createHelia();
+          const strings = HeliaStrings.strings(helia);
+          const cid = await strings.add(imageURL);
+          // console.log("cid", cid.toString());
+          return cid.toString();
+        }
+        async retriveImageURL(cid) {
+          const helia = await Helia.createHelia();
+          const strings = HeliaStrings.strings(helia);
+          const text = await strings.get(cid);
+          // console.log("text", text);
+          return text;
         }
       }
     </script>
