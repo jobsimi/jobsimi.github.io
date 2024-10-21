@@ -52,7 +52,7 @@ contract GravatarRegistry {
     }
 
     // Metadata
-    string public version = "0.1.0";
+    string public version = "0.2.0";
     address public contractCreator;
     address public contractOwner;
 
@@ -133,7 +133,7 @@ contract GravatarRegistry {
     }
 
     // Balance management
-    function withdraw(uint amount) public payable {
+    function transferOut(address payable to, uint amount) public {
         require(
             msg.sender == contractOwner,
             "Only the constract owner can call this function"
@@ -142,7 +142,19 @@ contract GravatarRegistry {
         require(amount <= address(this).balance, "Amount exceeds balance");
         require(amount > 0, "Amount must be greater than 0");
 
-        payable(msg.sender).transfer(amount);
+        to.transfer(amount);
+    }
+    function transferAllOut(address payable to) public {
+        require(
+            msg.sender == contractOwner,
+            "Only the constract owner can call this function"
+        );
+        require(address(this).balance > 0, "No balance to transfer");
+
+        to.transfer(address(this).balance);
+    }
+    function transferIn() public payable {
+        payable(msg.sender).transfer(msg.value);
     }
     function getBalance() public view returns (uint256) {
         return address(this).balance;
