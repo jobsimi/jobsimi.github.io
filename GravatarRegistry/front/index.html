@@ -267,7 +267,19 @@
                 createGravatarForm["gravatar-url"].value
               );
 
-              await web3.readGravatar(web3.walletAddress);
+              // wait for the gravatar to be created
+              {
+                let createdGravatar;
+                while (!createdGravatar) {
+                  try {
+                    createdGravatar = await web3.readGravatar(
+                      web3.walletAddress
+                    );
+                  } catch (error) {}
+
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
+                }
+              }
 
               // close modal
               {
@@ -335,7 +347,12 @@
 
                 // Check Gravatar, if exists, update it
                 {
-                  const gravatar = await web3.readGravatar(web3.walletAddress);
+                  let gravatar;
+                  try {
+                    gravatar = await web3.readGravatar(web3.walletAddress);
+                  } catch (error) {
+                    console.log(error);
+                  }
                   if (gravatar) {
                     const [previous_name, previous_url] = gravatar;
                     createGravatarForm["gravatar-name"].value = previous_name;
@@ -386,6 +403,31 @@
                               createGravatarForm["gravatar-url"].value,
                             ]
                           );
+
+                          // wait for the gravatar to be updated
+                          {
+                            let updatedGravatar = false;
+                            while (!updatedGravatar) {
+                              try {
+                                const currentGravatar = await web3.readGravatar(
+                                  web3.walletAddress
+                                );
+                                // if the gravatar is updated
+                                if (
+                                  currentGravatar[0] ===
+                                    createGravatarForm["gravatar-name"].value &&
+                                  currentGravatar[1] ===
+                                    createGravatarForm["gravatar-url"].value
+                                ) {
+                                  updatedGravatar = currentGravatar;
+                                }
+                              } catch (error) {}
+
+                              await new Promise((resolve) =>
+                                setTimeout(resolve, 1000)
+                              );
+                            }
+                          }
 
                           // close modal
                           {
