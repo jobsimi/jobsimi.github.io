@@ -496,6 +496,10 @@
       async function initLoadingGravatarList() {
         {
           {
+            const blockTimestamp_lte = parseInt(
+              new Date().getTime() / 1000
+            ).toString();
+
             const response = await fetch(
               "https://api.studio.thegraph.com/query/91750/gravatarregistry-v0_2_0/v0.1.4",
               {
@@ -505,16 +509,23 @@
                 },
                 body: JSON.stringify({
                   query: `
-                  {
-                    gravatars(first: 10, orderBy: blockTimestamp, orderDirection: desc, skip: 0) {
-                      id
-                      owner
-                      name
-                      url
-                      blockTimestamp
-                      transactionHash
+                    {
+                      gravatars(
+                        first: 10
+                        orderBy: blockTimestamp
+                        orderDirection: desc
+                        where: {
+                          blockTimestamp_lt: "${blockTimestamp_lte}"
+                        }
+                      ) {
+                        id
+                        owner
+                        name
+                        url
+                        transactionHash
+                        blockTimestamp
+                      }
                     }
-                  }
                   `,
                 }),
               }
