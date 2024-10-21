@@ -68,6 +68,18 @@
               </div>
             </div>
           </div>
+
+          <!-- loading more... -->
+          <div class="text-center text-gray-500 text-sm mt-4" id="loading-more">
+            <!-- button -->
+            <button
+              class="rounded-md border border-transparent p-2.5 text-center text-sm transition-all text-slate-600 hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none hover:text-blue-500 hover:scale-105"
+              id="load-more-button"
+              title="Load More"
+            >
+              Load more
+            </button>
+          </div>
         </div>
 
         <!-- Tools float right center: Create gravatar, goto top, etc. -->
@@ -225,6 +237,7 @@
 
         const web3 = new Web3();
 
+        // create gravatar
         {
           const createGravatarButton = document.getElementById(
             "create-gravatar-button"
@@ -491,6 +504,46 @@
             }
           });
         }
+
+        // loading more
+        {
+          const gravatarListContainer =
+            document.getElementById("gravatar-list");
+          const loadingMoreButton = document.getElementById("load-more-button");
+
+          loadingMoreButton.addEventListener("click", async (event) => {
+            event.preventDefault();
+
+            // last gravatar in gravatar-list
+            const blockTimestamp_lt =
+              gravatarListContainer.lastElementChild.getAttribute(
+                "data-block-timestamp"
+              );
+
+            // Loading...
+            {
+              loadingMoreButton.innerHTML = `Loading...`;
+              loadingMoreButton.disabled = true;
+            }
+
+            const gravatars = await searchGravatars({
+              blockTimestamp_lt,
+            });
+
+            if (gravatars.length === 0) {
+              loadingMoreButton.classList.add("hidden");
+            } else {
+              gravatarListContainer.innerHTML =
+                gravatarListContainer.innerHTML + renderGravatars(gravatars);
+            }
+
+            // Done
+            {
+              loadingMoreButton.innerHTML = `Load more`;
+              loadingMoreButton.disabled = false;
+            }
+          });
+        }
       }
 
       async function initLoadingGravatarList() {
@@ -521,24 +574,24 @@
             },
             body: JSON.stringify({
               query: `
-                          {
-                            gravatars(
-                              first: ${pageSize}
-                              orderBy: blockTimestamp
-                              orderDirection: desc
-                              where: {
-                                blockTimestamp_lt: "${blockTimestamp_lt}"
-                              }
-                            ) {
-                              id
-                              owner
-                              name
-                              url
-                              transactionHash
-                              blockTimestamp
-                            }
-                          }
-                        `,
+                {
+                  gravatars(
+                    first: ${pageSize}
+                    orderBy: blockTimestamp
+                    orderDirection: desc
+                    where: {
+                      blockTimestamp_lt: "${blockTimestamp_lt}"
+                    }
+                  ) {
+                    id
+                    owner
+                    name
+                    url
+                    transactionHash
+                    blockTimestamp
+                  }
+                }
+              `,
             }),
           }
         );
@@ -558,6 +611,7 @@
                 gravatar.transactionHash
               }#eventlog"
               title="View on Etherscan"
+              data-block-timestamp="${gravatar.blockTimestamp}"
             >
               <div class="flex">
                 <img
