@@ -427,7 +427,16 @@
                     // Gravatar preview
                     {
                       gravatarPreview.alt = previous_name;
-                      gravatarPreview.src = previous_url;
+                      {
+                        if (ipfs.isImageCID(previous_url)) {
+                          gravatarPreview.src = await ipfs.retriveImageURL(
+                            previous_url
+                          );
+                        } else {
+                          gravatarPreview.src = previous_url;
+                        }
+                      }
+
                       gravatarPreview.title = previous_name;
                     }
 
@@ -552,15 +561,6 @@
 
               // check gravatar url
               {
-                // normal http url
-                if (
-                  gravatarURL.startsWith("https://") ||
-                  gravatarURL.startsWith("http://")
-                ) {
-                  gravatarPreview.src = gravatarURL;
-                  return;
-                }
-
                 // ipfs cid
                 // bafkreihsc6mcj7xbkce55b6ejgwlhqwcon73qf7seevl45ooomsdg24bfi
                 if (ipfs.isImageCID(gravatarURL)) {
@@ -569,7 +569,6 @@
                   return;
                 }
 
-                // invalid url
                 gravatarPreview.src = gravatarURL;
               }
             }
@@ -1110,6 +1109,10 @@
           return text;
         }
         isImageCID(string) {
+          if (string.startsWith("https://") || string.startsWith("http://")) {
+            return false;
+          }
+
           if (string.length === 59) {
             return true;
           }
