@@ -275,6 +275,7 @@
 
     <script type="module">
       import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.min.js";
+      import { CID } from "https://cdn.jsdelivr.net/npm/multiformats@13.3.0/+esm";
 
       window.onload = async () => {
         await init();
@@ -546,9 +547,35 @@
             gravatarPreview.alt = createGravatarForm["gravatar-name"].value;
             gravatarPreview.title = gravatarPreview.alt;
           });
-          createGravatarForm["gravatar-url"].addEventListener("input", () => {
-            gravatarPreview.src = createGravatarForm["gravatar-url"].value;
-          });
+          createGravatarForm["gravatar-url"].addEventListener(
+            "input",
+            async () => {
+              const gravatarURL = createGravatarForm["gravatar-url"].value;
+
+              // check gravatar url
+              {
+                // normal http url
+                if (
+                  gravatarURL.startsWith("https://") ||
+                  gravatarURL.startsWith("http://")
+                ) {
+                  gravatarPreview.src = gravatarURL;
+                  return;
+                }
+
+                // ipfs cid
+                // bafkreihsc6mcj7xbkce55b6ejgwlhqwcon73qf7seevl45ooomsdg24bfi
+                if (gravatarURL.length === 59) {
+                  gravatarPreview.src = await ipfs.retriveImageURL(gravatarURL);
+                  console.log("gravatarURL", gravatarURL);
+                  return;
+                }
+
+                // invalid url
+                gravatarPreview.src = gravatarURL;
+              }
+            }
+          );
 
           uploadGravatarButton.addEventListener("click", async () => {
             const fileInput = document.getElementById("upload-gravatar-file");
@@ -1064,11 +1091,12 @@
           // console.log("cid", cid.toString());
           return cid.toString();
         }
-        async retriveImageURL(cid) {
+        async retriveImageURL(string) {
           const helia = await Helia.createHelia();
           const strings = HeliaStrings.strings(helia);
+          const cid = CID.parse(string);
           const text = await strings.get(cid);
-          // console.log("text", text);
+          console.log("text", text);
           return text;
         }
       }
