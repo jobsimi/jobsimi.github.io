@@ -23,10 +23,6 @@
         },
       };
     </script>
-
-    <!-- IPFS -->
-    <script src="https://unpkg.com/helia@5.0.1/dist/index.min.js"></script>
-    <script src="https://unpkg.com/@helia/strings@4.0.0/dist/index.min.js"></script>
   </head>
 
   <body>
@@ -184,43 +180,9 @@
                 />
               </div>
               <div class="mb-4">
-                <div
-                  class="flex items-center justify-between text-gray-700 font-bold mb-2"
+                <label class="block text-gray-700 font-bold mb-2"
+                  >Gravatar URL:</label
                 >
-                  <div>Gravatar URL:</div>
-
-                  <!-- upload -->
-                  <div class="hidden">
-                    <button
-                      class="ml-2 hover:bg-blue-500 hover:text-white rounded-md px-2 py-1 text-sm transition-colors duration-300 hover:scale-105"
-                      type="button"
-                      id="upload-gravatar-button"
-                      title="Upload Gravatar file"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 inline-block"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                        />
-                      </svg>
-                    </button>
-                    <input
-                      type="file"
-                      id="upload-gravatar-file"
-                      name="upload-gravatar-file"
-                      class="hidden"
-                      accept="image/png, image/jpeg, image/webp, image/jpg, .svg"
-                    />
-                  </div>
-                </div>
                 <div class="flex items-center">
                   <img
                     src=""
@@ -275,7 +237,6 @@
 
     <script type="module">
       import { ethers } from "https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.min.js";
-      import { CID } from "https://cdn.jsdelivr.net/npm/multiformats@13.3.0/+esm";
 
       window.onload = async () => {
         await init();
@@ -427,15 +388,8 @@
                     // Gravatar preview
                     {
                       gravatarPreview.alt = previous_name;
-                      {
-                        if (ipfs.isImageCID(previous_url)) {
-                          gravatarPreview.src = await ipfs.retriveImageURL(
-                            previous_url
-                          );
-                        } else {
-                          gravatarPreview.src = previous_url;
-                        }
-                      }
+
+                      gravatarPreview.src = previous_url;
 
                       gravatarPreview.title = previous_name;
                     }
@@ -559,62 +513,9 @@
             async () => {
               const gravatarURL = createGravatarForm["gravatar-url"].value;
 
-              // check gravatar url
-              {
-                // ipfs cid
-                // bafkreihsc6mcj7xbkce55b6ejgwlhqwcon73qf7seevl45ooomsdg24bfi
-                if (ipfs.isImageCID(gravatarURL)) {
-                  gravatarPreview.src = await ipfs.retriveImageURL(gravatarURL);
-                  console.log("gravatarURL", gravatarURL);
-                  return;
-                }
-
-                gravatarPreview.src = gravatarURL;
-              }
+              gravatarPreview.src = gravatarURL;
             }
           );
-
-          uploadGravatarButton.addEventListener("click", async () => {
-            const fileInput = document.getElementById("upload-gravatar-file");
-
-            // click
-            {
-              fileInput.click();
-
-              fileInput.addEventListener("change", () => {
-                const file = fileInput.files[0];
-
-                // clear file input
-                fileInput.value = "";
-
-                if (!file) {
-                  return;
-                }
-
-                // check file size
-                if (file.size > 1024 * 1024 * 1) {
-                  alert("File size must be less than 1MB");
-
-                  return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = async (event) => {
-                  const fileUrl = event.target.result;
-
-                  // upload to ipfs
-                  {
-                    const cid = await ipfs.addImageURL(fileUrl);
-                    {
-                      gravatarPreview.src = fileUrl;
-                      createGravatarForm["gravatar-url"].value = cid;
-                    }
-                  }
-                };
-                reader.readAsDataURL(file);
-              });
-            }
-          });
 
           closeCreateGravatarModal.addEventListener("click", () => {
             // close modal
@@ -766,16 +667,6 @@
         return json.data.gravatars;
       }
       async function renderGravatars(gravatars) {
-        // retrive ipfs url
-        for (let i = 0; i < gravatars.length; i++) {
-          const gravatar = gravatars[i];
-          const gravatarURL = gravatar.url;
-
-          if (ipfs.isImageCID(gravatarURL)) {
-            gravatar.url = await ipfs.retriveImageURL(gravatarURL);
-          }
-        }
-
         return gravatars
           .map(
             (gravatar) => `
@@ -1081,47 +972,6 @@
           return await this.contract.updateGravatar(current_name, current_url);
         }
       }
-
-      class IPFS {
-        async test() {
-          const helia = await Helia.createHelia();
-          const strings = HeliaStrings.strings(helia);
-          const cid = await strings.add("hello world");
-          console.log("cid", cid.toString());
-          {
-            const text = await strings.get(cid);
-            console.log("text", text);
-          }
-        }
-        async addImageURL(imageURL) {
-          const helia = await Helia.createHelia();
-          const strings = HeliaStrings.strings(helia);
-          const cid = await strings.add(imageURL);
-          // console.log("cid", cid.toString());
-          return cid.toString();
-        }
-        async retriveImageURL(string) {
-          const helia = await Helia.createHelia();
-          const strings = HeliaStrings.strings(helia);
-          const cid = CID.parse(string);
-          const text = await strings.get(cid);
-          console.log("text", text);
-          return text;
-        }
-        isImageCID(string) {
-          if (string.startsWith("https://") || string.startsWith("http://")) {
-            return false;
-          }
-
-          if (string.length === 59) {
-            return true;
-          }
-
-          return false;
-        }
-      }
-
-      const ipfs = new IPFS();
     </script>
   </body>
 </html>
