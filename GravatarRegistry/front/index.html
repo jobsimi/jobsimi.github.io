@@ -26,9 +26,9 @@
   </head>
 
   <body>
-    <div class="container p-6 sm:p-4 mx-auto max-w-3xl font-serif">
+    <div class="container max-w-3xl p-6 mx-auto font-serif sm:p-4">
       <div class="flex flex-col min-h-screen">
-        <div class="text-3xl font-bold mb-4 md:text-4xl">
+        <div class="mb-4 text-3xl font-bold md:text-4xl">
           Gravatar Registry
 
           <!-- version -->
@@ -36,7 +36,7 @@
             >v0.2.0</span
           >
         </div>
-        <div class="text-xl mb-4">
+        <div class="mb-4 text-xl">
           A simple dapp to registry gravatar with
           <a
             href="https://sepolia.etherscan.io/address/0x2E8bcB8acf0e27bfF17ECC2a8417453877c5Bba4"
@@ -46,20 +46,20 @@
           </a>
         </div>
         <!-- Gravatar List -->
-        <div class="text-xl mb-4">
-          <div class="text-xl font-bold mb-4">Gravatar List</div>
+        <div class="mb-4 text-xl">
+          <div class="mb-4 text-xl font-bold">Gravatar List</div>
 
-          <div id="gravatar-list" class="flex gap-4 flex-wrap group">
-            <div class="animate-pulse flex space-x-4 w-full mx-auto">
-              <div class="rounded-full bg-slate-200 h-10 w-10"></div>
-              <div class="flex-1 space-y-6 py-1">
-                <div class="h-2 bg-slate-200 rounded"></div>
+          <div id="gravatar-list" class="flex flex-wrap gap-4 group">
+            <div class="flex w-full mx-auto space-x-4 animate-pulse">
+              <div class="w-10 h-10 rounded-full bg-slate-200"></div>
+              <div class="flex-1 py-1 space-y-6">
+                <div class="h-2 rounded bg-slate-200"></div>
                 <div class="space-y-3">
                   <div class="grid grid-cols-3 gap-4">
-                    <div class="h-2 bg-slate-200 rounded col-span-2"></div>
-                    <div class="h-2 bg-slate-200 rounded col-span-1"></div>
+                    <div class="h-2 col-span-2 rounded bg-slate-200"></div>
+                    <div class="h-2 col-span-1 rounded bg-slate-200"></div>
                   </div>
-                  <div class="h-2 bg-slate-200 rounded"></div>
+                  <div class="h-2 rounded bg-slate-200"></div>
                 </div>
               </div>
             </div>
@@ -67,7 +67,7 @@
 
           <!-- loading more... -->
           <div
-            class="text-center text-gray-500 text-sm mt-4 hidden"
+            class="hidden mt-4 text-sm text-center text-gray-500"
             id="loading-more"
           >
             <!-- button -->
@@ -81,7 +81,7 @@
           </div>
           <!-- Already loaded all gravatar. -->
           <div
-            class="text-center text-gray-500 text-sm mt-4 hidden"
+            class="hidden mt-4 text-sm text-center text-gray-500"
             id="already-loaded-all"
           >
             <div class="flex justify-center text-gray-300 text-sm p-2.5">
@@ -108,7 +108,7 @@
               <!-- icon -->
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 inline-block"
+                class="inline-block w-6 h-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -131,7 +131,7 @@
               <!-- icon -->
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 inline-block"
+                class="inline-block w-6 h-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -152,13 +152,13 @@
     <!-- Create gravatar modal -->
     <div
       id="create-gravatar-modal"
-      class="opacity-0 pointer-events-none transition-opacity duration-300"
+      class="transition-opacity duration-300 opacity-0 pointer-events-none"
     >
       <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+        class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50"
       >
-        <div class="bg-white rounded-lg p-4 shadow-lg w-full max-w-md">
-          <h2 class="text-xl font-bold mb-4" id="create-gravatar-modal-title">
+        <div class="w-full max-w-md p-4 bg-white rounded-lg shadow-lg">
+          <h2 class="mb-4 text-xl font-bold" id="create-gravatar-modal-title">
             Create Gravatar
           </h2>
           <div
@@ -168,7 +168,7 @@
           <form id="create-gravatar-form">
             <div class="relative">
               <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2"
+                <label class="block mb-2 font-bold text-gray-700"
                   >Gravatar Name:</label
                 >
                 <input
@@ -180,7 +180,7 @@
                 />
               </div>
               <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2"
+                <label class="block mb-2 font-bold text-gray-700"
                   >Gravatar URL:</label
                 >
                 <div class="flex items-center">
@@ -188,7 +188,7 @@
                     src=""
                     alt=""
                     title=""
-                    class="w-12 h-12 rounded-full mr-4"
+                    class="w-12 h-12 mr-4 rounded-full"
                     referrerpolicy="no-referrer"
                     id="gravatar-preview"
                   />
@@ -204,12 +204,12 @@
 
               <!-- loading -->
               <div
-                class="absolute left-0 top-0 w-full h-full bg-white/50 flex items-center justify-center"
+                class="absolute top-0 left-0 flex items-center justify-center w-full h-full bg-white/50"
                 id="create-gravatar-form-loading"
               >
                 <div class="flex items-center justify-center w-full h-full">
                   <div
-                    class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-400"
+                    class="w-12 h-12 border-b-2 border-gray-400 rounded-full animate-spin"
                   ></div>
                 </div>
               </div>
@@ -217,14 +217,14 @@
             <div class="flex justify-end">
               <button
                 type="submit"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
                 id="submit-create-gravatar-modal"
               >
                 Create
               </button>
               <button
                 type="button"
-                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-2"
+                class="px-4 py-2 ml-2 font-bold text-white bg-gray-500 rounded hover:bg-gray-700"
                 id="close-create-gravatar-modal"
               >
                 Cancel
@@ -319,7 +319,7 @@
               console.error(error);
 
               walletConnectStatus.innerHTML = `
-                            <div class="text-red-500 text-sm bg-red-100 p-2 rounded-lg mb-4 break-all">
+                            <div class="p-2 mb-4 text-sm text-red-500 break-all bg-red-100 rounded-lg">
                               Wallet error: ${error.message}
                             </div>
                             `;
@@ -343,7 +343,7 @@
               // loading
               {
                 walletConnectStatus.innerHTML = `
-                            <div class="text-yellow-500 text-sm bg-yellow-100 p-2 rounded-lg mb-4">
+                            <div class="p-2 mb-4 text-sm text-yellow-500 bg-yellow-100 rounded-lg">
                               Wallet connecting...
                             </div>
                             `;
@@ -366,7 +366,7 @@
                     "..." +
                     web3.walletAddress.slice(-4);
                   walletConnectStatus.innerHTML = `
-                            <div class="text-green-500 text-sm bg-green-100 p-2 rounded-lg mb-4">
+                            <div class="p-2 mb-4 text-sm text-green-500 bg-green-100 rounded-lg">
                               Wallet connected: <a href="https://etherscan.io/address/${ellipseWalletAddress}" title="${web3.walletAddress}" class="text-blue-500">${ellipseWalletAddress}</a>
                             </div>
                             `;
@@ -469,7 +469,7 @@
                         } catch (error) {
                           console.error(error);
                           walletConnectStatus.innerHTML = `
-                                <div class="text-red-500 text-sm bg-red-100 p-2 rounded-lg mb-4 break-all">
+                                <div class="p-2 mb-4 text-sm text-red-500 break-all bg-red-100 rounded-lg">
                                   Update Gravatar error: ${error.message}
                                 </div>
                                 `;
@@ -496,7 +496,7 @@
               } catch (error) {
                 console.error(error);
                 walletConnectStatus.innerHTML = `
-                            <div class="text-red-500 text-sm bg-red-100 p-2 rounded-lg mb-4 break-all">
+                            <div class="p-2 mb-4 text-sm text-red-500 break-all bg-red-100 rounded-lg">
                               Wallet connect error: ${error.message}
                             </div>
                             `;
@@ -683,12 +683,12 @@
                 <img
                     src="${gravatar.url}"
                     alt="${gravatar.name}"
-                    class="w-12 h-12 rounded-full mr-4"
+                    class="w-12 h-12 mr-4 rounded-full"
                 />
                 <div class="flex flex-col justify-between gap-2">
                   <div class="text-lg font-bold">${gravatar.name}</div>
                   <div class="flex flex-col gap-1">
-                    <div class="text-xs text-gray-500 bg-gray-50 rounded-lg">
+                    <div class="text-xs text-gray-500 rounded-lg bg-gray-50">
                     ${new Date(gravatar.blockTimestamp * 1000).toLocaleString()}
                     </div>
 
