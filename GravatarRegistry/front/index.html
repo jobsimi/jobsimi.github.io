@@ -49,6 +49,9 @@
         <div class="mb-4 text-xl">
           <div class="mb-4 text-xl font-bold">Gravatar List</div>
 
+          <!-- Gravatars on SepoliaETH. -->
+          <div class="mb-4 text-sm text-gray-500">Gravatars on SepoliaETH.</div>
+
           <div id="gravatar-list" class="flex flex-wrap gap-4 group">
             <div class="flex w-full mx-auto space-x-4 animate-pulse">
               <div class="w-10 h-10 rounded-full bg-slate-200"></div>
@@ -670,8 +673,7 @@
         return gravatars
           .map(
             (gravatar) => `
-            <a class="flex items-center border border-gray-200 p-4 hover:bg-gray-100 rounded-lg hover:border-gray-300 hover:shadow-md transition-all duration-300 ease-in-out
-            hover:scale-105 xl:hover:scale-[3] w-full sm:w-auto"
+            <a class="flex items-center w-full p-4 transition-all duration-300 ease-in-out border border-gray-200 rounded-lg hover:bg-gray-100 hover:border-gray-300 hover:shadow-md hover:scale-105 sm:w-auto"
             "
               href="https://sepolia.etherscan.io/tx/${
                 gravatar.transactionHash
