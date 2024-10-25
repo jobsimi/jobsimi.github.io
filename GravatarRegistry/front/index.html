@@ -370,7 +370,7 @@
                     web3.walletAddress.slice(-4);
                   walletConnectStatus.innerHTML = `
                             <div class="p-2 mb-4 text-sm text-green-500 bg-green-100 rounded-lg">
-                              Wallet connected: <a href="https://etherscan.io/address/${web3.walletAddress}" title="${web3.walletAddress}" class="text-blue-500">${ellipseWalletAddress}</a>
+                              Wallet connected: <a href="https://sepolia.etherscan.io/address/${web3.walletAddress}" title="${web3.walletAddress}" class="text-blue-500">${ellipseWalletAddress}</a>
                             </div>
                             `;
                 }
@@ -678,7 +678,7 @@
               href="https://sepolia.etherscan.io/tx/${
                 gravatar.transactionHash
               }#eventlog"
-              title="View on Etherscan"
+              title="View on Sepolia Etherscan"
               data-block-timestamp="${gravatar.blockTimestamp}"
             >
               <div class="flex">
